@@ -1,5 +1,5 @@
-Для работы бота должна быть создана база данных 
-С таблицей User: 
+п»їР”Р»СЏ СЂР°Р±РѕС‚С‹ Р±РѕС‚Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЃРѕР·РґР°РЅР° Р±Р°Р·Р° РґР°РЅРЅС‹С… 
+РЎ С‚Р°Р±Р»РёС†РµР№ User: 
 	user_id : int
 	status : int 
 	api_key : varchar(255) : nullable
@@ -8,7 +8,7 @@
 	issue_pause_start_time : float
 	pause_summary : float
 
-Также в директории бота должен быть создан файл config.py содержащий следующие переменные
+РўР°РєР¶Рµ РІ РґРёСЂРµРєС‚РѕСЂРёРё Р±РѕС‚Р° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРѕР·РґР°РЅ С„Р°Р№Р» config.py СЃРѕРґРµСЂР¶Р°С‰РёР№ СЃР»РµРґСѓСЋС‰РёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 SERVER = "EXAMPLE"
 DATABASE = "EXAMPLE"
 DRIVER = "{ODBC Driver 13 for SQL Server}"
@@ -17,11 +17,11 @@ PASSWORD = "EXAMPLE"
 BOT_TOKEN = "exampleexampleexampleexample"
 REDMINE_URL = "https://redmine.yourcompany.com/"
 
-Команды 																				Пример 
-установка ключа редмайна /(set_api_key|api_key|api|key|akey|ak|k) (ключ)  			/ak 647268476138562876582
-начало работы над задачей /(begin_time_entries|bte|start_time) (айдишник задачи)  	/bte 21444
-конец работы над задачей /(end_time_entries|ete) (коментарий) 						/ete Все сделал
-пауза /(pause_time_entries|pte|p|pause)												/pause
-снятие паузы /(continue_time_entries|cte|c|cont|continue)							/c
-информация по текущей задаче = /(current_issue_info|cii|info|issue)					/info
-информация по текущему статусу юзера /(get_user_state|state)						/state
+РљРѕРјР°РЅРґС‹ 																				РџСЂРёРјРµСЂ 
+СѓСЃС‚Р°РЅРѕРІРєР° РєР»СЋС‡Р° СЂРµРґРјР°Р№РЅР° /(set_api_key|api_key|api|key|akey|ak|k) (РєР»СЋС‡)  			/ak 647268476138562876582
+РЅР°С‡Р°Р»Рѕ СЂР°Р±РѕС‚С‹ РЅР°Рґ Р·Р°РґР°С‡РµР№ /(begin_time_entries|bte|start_time) (Р°Р№РґРёС€РЅРёРє Р·Р°РґР°С‡Рё)  	/bte 21444
+РєРѕРЅРµС† СЂР°Р±РѕС‚С‹ РЅР°Рґ Р·Р°РґР°С‡РµР№ /(end_time_entries|ete) (РєРѕРјРµРЅС‚Р°СЂРёР№) 						/ete Р’СЃРµ СЃРґРµР»Р°Р»
+РїР°СѓР·Р° /(pause_time_entries|pte|p|pause)												/pause
+СЃРЅСЏС‚РёРµ РїР°СѓР·С‹ /(continue_time_entries|cte|c|cont|continue)							/c
+РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ С‚РµРєСѓС‰РµР№ Р·Р°РґР°С‡Рµ = /(current_issue_info|cii|info|issue)					/info
+РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ С‚РµРєСѓС‰РµРјСѓ СЃС‚Р°С‚СѓСЃСѓ СЋР·РµСЂР° /(get_user_state|state)						/state
