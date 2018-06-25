@@ -5,7 +5,9 @@ import userDB as udb
 import usercontainer as uc
 import re
 import config
+import logging
 
+logging.basicConfig(filename=config.LOG_FILE, level=logging.DEBUG)
 UserDb = udb.UserDB(config.SERVER, config.DATABASE, config.DRIVER, config.USERNAME, config.PASSWORD)
 UserContainer = uc.UserContainer(UserDb)
 
@@ -16,11 +18,14 @@ Pause_Time_Entries_RE = "^/(pause_time_entries|pte|p|pause)\s*$"
 Continue_Time_Entries_RE = "^/(continue_time_entries|cte|c|cont|continue)\s*$"
 Current_Issue_Info_RE = "^/(current_issue_info|cii|info|issue)\s*$"
 Get_User_State_RE = "^/(get_user_state|state)\s*$"
+Feedback = "^/(feedback)\s+(.+)\s*$"
 
 
 def process(bot: tel.Bot, update: tel.Update):
     user = UserContainer.get_user(update.effective_user.id)
     message = "Команда не распознана"
+    logging.info("From ({} : {}) message  : {}"
+                 .format(update.effective_user.id, update.effective_user.first_name, update.message.text))
 
     try:
         if re.match(Set_Api_Key_RE, update.message.text):
@@ -52,15 +57,29 @@ def process(bot: tel.Bot, update: tel.Update):
         elif re.match(Get_User_State_RE, update.message.text):
             message = user.get_user_state()
 
+        elif re.match(Feedback, update.message.text):
+            matcher = re.search(Feedback, update.message.text)
+            save_feedback("From {} : {} : \n {} \n"
+                          .format(update.effective_user.first_name, update.effective_user.id, matcher.group(2)))
+            message = "Спасибо за отзыв"
+
         send_message(bot, update, message)
 
-    except Exception as e:
-        print(e)
+    except Exception:
+        logging.exception("Exception")
         send_message(bot, update, "Во время выполнения команды произошла ошибка")
 
 
 def send_message(bot: tel.Bot, update: tel.Update, message):
     bot.send_message(update.message.chat.id, message)
+    logging.info("Send to ({} : {}) message  : {}"
+                 .format(update.effective_user.id, update.effective_user.first_name, message))
+
+
+def save_feedback(message):
+    file = open(config.FEEDBACK_FILE, "a")
+    file.write(message)
+    file.close()
 
 
 if __name__ == "__main__":
@@ -70,5 +89,5 @@ if __name__ == "__main__":
     handler = MessageHandler(Filters.command | Filters.text, process)
     dispatcher.add_handler(handler)
 
-    print("Start")
+    logging.info("Start")
     updater.start_polling()
