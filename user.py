@@ -74,7 +74,7 @@ class User:
         self.status = UserState.free
 
         return "Временная отметка создана\n" \
-               "Вы потратили {}".format(spenthours)
+               "Вы потратили {} часов".format(spenthours)
 
     def pause_time_entries(self):
         if not self.api_key_valid:
@@ -135,15 +135,36 @@ class User:
                 .format(self.issue_id, round((time.time() - self.issue_start_time - self.pause_summary) / (60*60), 2))
         elif self.status == UserState.pause:
             return "Задача {} стоит на паузе уже {} часов вы работали над ней {} часов".format(self.issue_id,
-                            round((time.time() - self.issue_pause_start_time)/(60*60), 2),
-                            round((self.issue_pause_start_time - self.issue_start_time - self.pause_summary) / (60 * 60), 2))
+                        round((time.time() - self.issue_pause_start_time)/(60*60), 2),
+                        round((self.issue_pause_start_time - self.issue_start_time - self.pause_summary) / (60 * 60), 2))
         return "Неизвестное состояние"
 
+    def drop_current_issue(self):
+        if not self.api_key_valid:
+            return "Не установлен ключ для доступа к редмайну!"
+        elif self.status == UserState.free:
+            return "Вы не работаете над задачей"
 
-if __name__ == '__main__':
+        self.status = UserState.free
 
-    u = User("ebf5ba42b3ba39611660f4b9456c952cfbd7273b")
-    u.begin_time_entries(24876)
-    print(u.current_issue_info())
+        return "Задача сброшена"
 
-    pass
+    def create_issue_time_entries(self, issue_id, hours, message):
+        if not self.api_key_valid:
+            return "Не установлен ключ для доступа к редмайну"
+
+        try:
+            rq.create_time_entries(self.api_key, issue_id, float(hours), message)
+        except:
+            return "Ошибка во время создания временной отметки"
+
+        return "Временная отметка создана"
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.status == other.status and self.user_id == other.user_id and self.api_key == other.api_key and\
+                   self.api_key_valid == other.api_key_valid and self.issue_id == other.issue_id and \
+                   self.issue_start_time == other.issue_start_time and \
+                   self.issue_pause_start_time == other.issue_pause_start_time and\
+                   self.pause_summary == other.pause_summary
+        return False

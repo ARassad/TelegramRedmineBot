@@ -1,27 +1,16 @@
 import pyodbc
 import user as u
 
+
 class UserDB:
 
-    def __init__(self, server, database, driver, username=None, password=None):
-        self.server = server
-        self.database = database
-        self.username = username
-        self.password = password
-        self.driver = driver
+    def __init__(self, connection_string):
+        self.connection_string = connection_string
 
         self.cursor, self.cnxn = self.__connect_database()
 
     def __connect_database(self):
-
-        if self.username is not None and self.password is not None:
-            connection_string = 'DRIVER={};PORT=1433;SERVER={};PORT=1443;DATABASE={};UID={};PWD={}'\
-                .format(self.driver, self.server, self.database, self.username, self.password)
-        else:
-            connection_string = 'DRIVER={};PORT=1433;SERVER={};PORT=1443;DATABASE={};Trusted_Connection=yes;'\
-                .format(self.driver, self.server,self.database)
-
-        cnxn = pyodbc.connect(connection_string, autocommit=True)
+        cnxn = pyodbc.connect(self.connection_string, autocommit=True)
         cursor = cnxn.cursor()
         return cursor, cnxn
 
