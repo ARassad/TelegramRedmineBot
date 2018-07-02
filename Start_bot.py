@@ -26,7 +26,7 @@ class RedmineBot:
     commands_description_string = ""
 
     def __init__(self):
-        logging.basicConfig(filename=config.LOG_FILE, level=logging.DEBUG)
+        logging.basicConfig(filename=config.LOG_FILE, level=logging.INFO)
 
         self.UserDb = udb.UserDB(config.CONNECTION_STRING)
         self.UserContainer = uc.UserContainer(self.UserDb)
