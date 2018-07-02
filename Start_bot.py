@@ -71,9 +71,8 @@ class RedmineBot:
 
     @staticmethod
     def save_feedback(message):
-        file = open(config.FEEDBACK_FILE, "a")
-        file.write(message)
-        file.close()
+        with open(config.FEEDBACK_FILE, "a", encoding="utf8") as f:
+            f.write(message)
         return "Спасибо за отзыв"
 
     @staticmethod
