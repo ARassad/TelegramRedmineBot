@@ -18,7 +18,7 @@ Get_User_State_RE = "^/({})\s*$"
 Feedback_RE = "^/({})\s+(.+)\s*$"
 Commands_List_RE = "^/({})\s*$"
 Drop_Issue_RE = "^/({})\s*$"
-Create_Time_Entries_RE = "^/({})\s+(\d+)\s+(\d+(\.\d+)?)\s+(.{{1,255}})$"
+Create_Time_Entries_RE = "^/({})\s+(\d+)\s+(\d+\.\d+?)\s+(.{{1,255}})$"
 
 
 class RedmineBot:
@@ -106,7 +106,8 @@ class RedmineBot:
         commands.append((Drop_Issue_RE.format(c_to_s(config.DROP_ISSUE_COMMANDS)),
                          lambda user, matcher: user.drop_current_issue()))
         commands.append((Create_Time_Entries_RE.format(c_to_s(config.CREATE_TIME_ENTRIES)),
-                         lambda user, matcher: user.create_issue_time_entries(matcher(2), matcher(3), matcher(4))))
+                         lambda user, matcher: user.create_issue_time_entries(matcher.group(2),
+                                                                              matcher.group(3), matcher.group(4))))
         return commands
 
     @staticmethod
