@@ -1,7 +1,7 @@
 from enum import Enum
 import time
 import redminerequests as rq
-
+import logging
 
 class UserState(Enum):
     unregister = 1
@@ -35,6 +35,7 @@ class User:
         except rq.NetworkUnauthorizedError:
             return "Невозможно авторизироваться заданым ключем"
         except:
+            logging.exception("Exception : set_api_key")
             return "Ошибка при доступе к редмайну. Не получилось проверить ключ"
 
         self.api_key = key
@@ -69,6 +70,7 @@ class User:
         try:
             rq.create_time_entries(self.api_key, self.issue_id, spenthours, text)
         except:
+            logging.exception("Exception : end_time_entries")
             return "Ошибка соединения во время создания временной отметки"
 
         self.status = UserState.free
@@ -112,6 +114,7 @@ class User:
         try:
             issue = rq.get_issues(self.issue_id, self.api_key)["issue"]
         except:
+            logging.exception("Exception : current_issue_info")
             return "Не удалось связаться с редмайном"
 
         mes = "Название проекта : {}\n" \
@@ -156,6 +159,7 @@ class User:
         try:
             rq.create_time_entries(self.api_key, issue_id, float(hours), message)
         except:
+            logging.exception("Exception : create_issue_time_entries")
             return "Ошибка во время создания временной отметки"
 
         return "Временная отметка создана"
