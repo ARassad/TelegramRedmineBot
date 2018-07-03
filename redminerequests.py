@@ -1,7 +1,7 @@
 import requests
 import config
 
-redmine_url = config.REDMINE_URL
+redmine_url = config.REDMINE_URL[0:-1] if config.REDMINE_URL[-1] == "/" else config.REDMINE_URL
 
 
 class NetworkUnauthorizedError(Exception):
@@ -9,7 +9,7 @@ class NetworkUnauthorizedError(Exception):
 
 
 def get_issues(id, api_key):
-    method = "issues/{}.json".format(id)
+    method = "/issues/{}.json".format(id)
 
     req = requests.get(redmine_url + method, headers={"X-Redmine-API-Key": api_key})
 
@@ -20,7 +20,7 @@ def get_issues(id, api_key):
 
 
 def create_time_entries(api_key, issue_id, hours, comment):
-    method = "time_entries.json"
+    method = "/time_entries.json"
     timeEntrie = {"time_entry": {'issue_id': issue_id, 'hours': hours, 'comments': comment}}
 
     req = requests.post(redmine_url + method, json=timeEntrie, headers={"X-Redmine-API-Key": api_key})
