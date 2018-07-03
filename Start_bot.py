@@ -34,7 +34,7 @@ class RedmineBot:
         self.commands = RedmineBot.commands_with_re()
         RedmineBot.commands_description_string = RedmineBot.create_commands_description()
 
-        self.updater = Updater(token=config.BOT_TOKEN)
+        self.updater = Updater(token=config.BOT_TOKEN, request_kwargs=RedmineBot.get_proxy_settings())
         self.dispatcher = self.updater.dispatcher
         handler = MessageHandler(Filters.command | Filters.text, self.process)
         self.dispatcher.add_handler(handler)
@@ -121,7 +121,7 @@ class RedmineBot:
         commands_descript.append("/{} <id задачи> - начало отсчета времени по задаче.\n"
                                  .format(RedmineBot.commands_to_string(config.BEGIN_TIME_ENTRIES_COMMANDS)))
         commands_descript.append("/{} <комментарий до 255 символов> - окончание отсчета работы над задачей и создание временной отметки в редмайне.\n"
-            .format(RedmineBot.commands_to_string(config.END_TIME_ENTRIES_COMMANDS)))
+                                 .format(RedmineBot.commands_to_string(config.END_TIME_ENTRIES_COMMANDS)))
         commands_descript.append("/{} - пауза.\n"
                                  .format(RedmineBot.commands_to_string(config.PAUSE_TIME_ENTRIES_COMMANDS)))
         commands_descript.append("/{} - снятие с паузы.\n"
@@ -139,6 +139,20 @@ class RedmineBot:
         commands_descript.append("/{} <id задачи> <время> <комментарий> - создание временной отметки в редмайне.\n"
                                  .format(RedmineBot.commands_to_string(config.CREATE_TIME_ENTRIES)))
         return "".join(commands_descript)
+
+    @staticmethod
+    def get_proxy_settings():
+        proxy_settings = None
+
+        if config.PROXY_URL is not None and len(config.PROXY_URL) > 0:
+            proxy_settings = {"proxy_url": config.PROXY_URL}
+            if config.PROXY_PASSWORD is not None and len(config.PROXY_PASSWORD) > 0 and \
+                    config.PROXY_USERNAME is not None and len(config.PROXY_USERNAME):
+                proxy_settings["urllib3_proxy_kwargs"] = {
+                    "username": config.PROXY_USERNAME,
+                    "password": config.PROXY_PASSWORD
+                }
+        return proxy_settings
 
 
 if __name__ == "__main__":

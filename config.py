@@ -4,6 +4,10 @@ REDMINE_URL = ""
 LOG_FILE = ""
 FEEDBACK_FILE = ""
 
+PROXY_URL = ""
+PROXY_USERNAME = ""
+PROXY_PASSWORD = ""
+
 SET_API_KEY_COMMANDS = ["set_api_key", "key"]
 BEGIN_TIME_ENTRIES_COMMANDS = ["begin_time_entries"]
 END_TIME_ENTRIES_COMMANDS = ["end_time_entries", "end", "finish"]
