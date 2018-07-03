@@ -3,6 +3,7 @@ import time
 import redminerequests as rq
 import logging
 
+
 class UserState(Enum):
     unregister = 1
     inprogress = 2
@@ -11,7 +12,6 @@ class UserState(Enum):
 
 
 class User:
-
     def __init__(self, user_id, api_key="null", status=UserState.free,
                  issue_id=0, issue_start_time=0, issue_pause_start_time=0, pause_summary=0):
         self.status = status
@@ -33,7 +33,7 @@ class User:
             rq.get_user_info(key)
             self.api_key_valid = True
         except rq.NetworkUnauthorizedError:
-            return "Невозможно авторизироваться заданым ключем"
+            return "Невозможно авторизироваться заданным ключом"
         except:
             logging.exception("Exception : set_api_key")
             return "Ошибка при доступе к редмайну. Не получилось проверить ключ"
@@ -137,7 +137,7 @@ class User:
             return "Вы работаете над задачей {} уже {} часов"\
                 .format(self.issue_id, round((time.time() - self.issue_start_time - self.pause_summary) / (60*60), 2))
         elif self.status == UserState.pause:
-            return "Задача {} стоит на паузе уже {} часов вы работали над ней {} часов".format(self.issue_id,
+            return "Задача {} стоит на паузе уже {} часов\nВы работали над ней {} часов".format(self.issue_id,
                         round((time.time() - self.issue_pause_start_time)/(60*60), 2),
                         round((self.issue_pause_start_time - self.issue_start_time - self.pause_summary) / (60 * 60), 2))
         return "Неизвестное состояние"

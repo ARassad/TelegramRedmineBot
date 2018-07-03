@@ -132,7 +132,7 @@ class RedmineBot:
                                  .format(RedmineBot.commands_to_string(config.GET_USER_STATE_COMMANDS)))
         commands_descript.append("/{} <текст> - пожелания для новых фич и тд.\n"
                                  .format(RedmineBot.commands_to_string(config.FEEDBACK_COMMANDS)))
-        commands_descript.append("/{} - список текущих комманд.\n"
+        commands_descript.append("/{} - список команд для бота.\n"
                                  .format(RedmineBot.commands_to_string(config.COMMANDS_LIST_COMMANDS)))
         commands_descript.append("/{} - сброс текущей задачи.\n"
                                  .format(RedmineBot.commands_to_string(config.DROP_ISSUE_COMMANDS)))
