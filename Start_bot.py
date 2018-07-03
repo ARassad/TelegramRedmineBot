@@ -51,8 +51,8 @@ class RedmineBot:
 
         try:
             for command in self.commands:
-                if re.match(command[0], update.message.text):
-                    matcher = re.search(command[0], update.message.text)
+                if re.match(command[0], update.message.text, re.MULTILINE | re.DOTALL):
+                    matcher = re.search(command[0], update.message.text, re.MULTILINE | re.DOTALL)
                     message = command[1](user, matcher)
                     break
 
