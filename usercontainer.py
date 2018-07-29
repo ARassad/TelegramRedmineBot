@@ -1,11 +1,11 @@
 import user as u
 import pyodbc
-import userDB as udb
+import dbprovider as udb
 
 
 class UserContainer:
 
-    def __init__(self, user_db: udb.UserDB, soft_max_users=50):
+    def __init__(self, user_db: udb.DBProvider, soft_max_users=50):
         self.users = []
         self.userDB = user_db
         self.soft_max_users = soft_max_users

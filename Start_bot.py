@@ -1,7 +1,7 @@
 from telegram.ext import Updater
 from telegram.ext import MessageHandler, Filters
 import telegram as tel
-import userDB as udb
+import dbprovider as udb
 import usercontainer as uc
 import re
 import config
@@ -28,7 +28,7 @@ class RedmineBot:
     def __init__(self):
         logging.basicConfig(filename=config.LOG_FILE, level=logging.INFO)
 
-        self.UserDb = udb.UserDB(config.CONNECTION_STRING)
+        self.UserDb = udb.get_dbprovider(config.CONNECTION_STRING)
         self.UserContainer = uc.UserContainer(self.UserDb)
 
         self.commands = RedmineBot.commands_with_re()

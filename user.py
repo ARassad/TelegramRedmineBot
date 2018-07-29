@@ -2,7 +2,8 @@ from enum import Enum
 import time
 import redminerequests as rq
 import logging
-
+import dbprovider as db
+import datetime
 
 class UserState(Enum):
     unregister = 1
@@ -67,16 +68,25 @@ class User:
         spenttime = time.time() - self.issue_start_time - self.pause_summary
         spenthours = round(spenttime / (60 * 60), 2)
 
+        request_result = False
+        result_message = ""
         try:
             rq.create_time_entries(self.api_key, self.issue_id, spenthours, text)
-        except:
-            logging.exception("Exception : end_time_entries")
-            return "Ошибка соединения во время создания временной отметки"
+            request_result = True
+        except rq.NetworkUnauthorizedError:
+            logging.exception("Не получилось авторизоваться user_id : {}".format(self.user_id))
+            result_message = "Не получилось авторизоваться в редмайне. Попробуйте обновить api_key."
+        except rq.CannotCreateTimeEntries:
+            logging.exception("Не получилось создать отметку в редмайне user_id : {}".format(self.user_id))
+            result_message = "Не получилось создать отметку в редмайне."
+        finally:
+            db.save_tiem_entrie_db(self.user_id, self.issue_id, spenthours, text, datetime.datetime.now(), request_result)
+            self.status = UserState.free
 
-        self.status = UserState.free
-
-        return "Временная отметка создана\n" \
-               "Вы потратили {} часов".format(spenthours)
+        result_message += "{}\nВы потратили {} часов".format("Временная отметка создана." if request_result
+                                                             else "Отметка будет автоматически создана после получения доступа к редмайну.",
+                                                             spenthours)
+        return result_message
 
     def pause_time_entries(self):
         if not self.api_key_valid:

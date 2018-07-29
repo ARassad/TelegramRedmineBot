@@ -1,10 +1,15 @@
 import requests
 import config
+import logging
 
 redmine_url = config.REDMINE_URL[0:-1] if config.REDMINE_URL[-1] == "/" else config.REDMINE_URL
 
 
 class NetworkUnauthorizedError(Exception):
+    pass
+
+
+class CannotCreateTimeEntries(Exception):
     pass
 
 
@@ -21,14 +26,18 @@ def get_issues(id, api_key):
 
 def create_time_entries(api_key, issue_id, hours, comment):
     method = "/time_entries.json"
-    timeEntrie = {"time_entry": {'issue_id': issue_id, 'hours': hours, 'comments': comment}}
+    time_entrie = {"time_entry": {'issue_id': issue_id, 'hours': hours, 'comments': comment}}
 
-    req = requests.post(redmine_url + method, json=timeEntrie, headers={"X-Redmine-API-Key": api_key})
+    try:
+        req = requests.post(redmine_url + method, json=time_entrie, headers={"X-Redmine-API-Key": api_key})
+    except Exception as e:
+        logging.exception("Cannot create redmine time entrie")
+        raise CannotCreateTimeEntries
 
     if req.status_code == 401:
         raise NetworkUnauthorizedError()
     elif req.status_code != 201:
-        raise ConnectionError()
+        raise CannotCreateTimeEntries()
 
     return req.json()
 
@@ -42,9 +51,3 @@ def get_user_info(api_key):
         raise NetworkUnauthorizedError()
 
     return req.json()
-
-
-if __name__ == '__main__':
-
-    saf = get_issues(24876, "ebf5ba42b3ba39611660f4b9456c952cfbd7273b")
-    pass
